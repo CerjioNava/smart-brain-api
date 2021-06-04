@@ -1,6 +1,7 @@
 // API PARA SMART BRAIN
 
 import express from 'express';
+import bcrypt from 'bcrypt-nodejs';
 
 const app = express();
 app.use(express.json());        // Middleware para poder interpretar el JSON del body.
@@ -24,6 +25,13 @@ const database = {
             entries: 0,
             joined: new Date()
         }
+    ],
+    login: [
+        {
+            id: '987',
+            hash: '',
+            email: 'john@gmail.com'
+        }
     ]
 
 }
@@ -31,7 +39,7 @@ const database = {
 // ----------------------------------------------------------------
 // Functionality
 
-// HOME PASE GET
+// HOME PAGE GET
 app.get('/', (req, res) => {
     // res.send('This is working');
     res.send(database.users);
@@ -39,8 +47,16 @@ app.get('/', (req, res) => {
 
 // SIGN IN POST
 app.post('/signin', (req, res) => {
-    // res.send('signin');
-    //res.json('signin');
+    // Load hash from your password DB.
+    bcrypt.compare("apple", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
+        // res == true
+        console.log('First guess', res)
+    });
+    bcrypt.compare("veggies", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
+        // res = false
+        console.log('Second guess', res)
+    });
+
     if (req.body.email === database.users[0].email &&           // Comparamos usuario
         req.body.password === database.users[0].password) {
         res.json("success");
@@ -52,6 +68,11 @@ app.post('/signin', (req, res) => {
 // REGISTER POST
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;     // Obtenemos la data del body
+
+    // bcrypt.hash(password, null, null, function(err, hash) {      // Hash de password
+    //     console.log(hash);
+    // });
+
     database.users.push({                           // Añadimos a la base de datos con el body
         id: '125',
         name: name,
@@ -65,7 +86,7 @@ app.post('/register', (req, res) => {
 
 // PROFILE GET
 app.get('/profile/:id', (req, res) => {
-    const { id } = req.params                       // Obtiene los parametros del "id" del URL.    
+    const { id } = req.params                       // Obtiene los parametros del "id" desde el URL.    
     database.users.forEach(user => {                // Loop en los usuarios
         if (user.id === id) {
             return res.json(user);                  // Si existe, devuelve usuario
@@ -86,6 +107,21 @@ app.put('/image', (req, res) => {
     res.status(404).json('no such user');           // Si no existe, 404.
 });
 
+
+// ----------------------------------------------------------------
+// Extraido de la página de bcrypt-nodejs para hacer hash en las passwords.
+
+// bcrypt.hash("bacon", null, null, function(err, hash) {
+//     // Store hash in your password DB.
+// });
+
+// // Load hash from your password DB.
+// bcrypt.compare("bacon", hash, function(err, res) {
+//     // res == true
+// });
+// bcrypt.compare("veggies", hash, function(err, res) {
+//     // res = false
+// });
 
 // ----------------------------------------------------------------
 
