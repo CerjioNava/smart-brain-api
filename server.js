@@ -2,9 +2,11 @@
 
 import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());        // Middleware para poder interpretar el JSON del body.
+app.use(cors());                // Middleware para evitar el error en el browser.
 
 // Base de datos de prueba
 const database = {
@@ -48,18 +50,19 @@ app.get('/', (req, res) => {
 // SIGN IN POST
 app.post('/signin', (req, res) => {
     // Load hash from your password DB.
-    bcrypt.compare("apple", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
-        // res == true
-        console.log('First guess', res)
-    });
-    bcrypt.compare("veggies", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
-        // res = false
-        console.log('Second guess', res)
-    });
+    // bcrypt.compare("apple", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
+    //     // res == true
+    //     console.log('First guess', res)
+    // });
+    // bcrypt.compare("veggies", '$2a$10$0/VMkaFrCMh15yU0WMPJeeRA/xRzIc1982GOmsDtMFwvHkGhGOJai', function(err, res) {
+    //     // res = false
+    //     console.log('Second guess', res)
+    // });
 
     if (req.body.email === database.users[0].email &&           // Comparamos usuario
-        req.body.password === database.users[0].password) {
-        res.json("success");
+         req.body.password === database.users[0].password) {
+        //res.json("success");
+        res.json(database.users[0]);
     } else {
         res.status(400).json("error logging in");
     }
@@ -77,7 +80,7 @@ app.post('/register', (req, res) => {
         id: '125',
         name: name,
         email: email,
-        password: password,
+        //password: password,
         entries: 0,
         joined: new Date()        
     });
@@ -125,6 +128,6 @@ app.put('/image', (req, res) => {
 
 // ----------------------------------------------------------------
 
-app.listen(3000, () => {
+app.listen(3001, () => {
    console.log('app is running on port 3000');
 });
