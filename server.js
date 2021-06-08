@@ -3,6 +3,24 @@
 import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
+import knex from 'knex';
+
+// Conexión con la base de datos a través del módulo Knex
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'root',
+      database : 'smartbrain'
+    }
+});
+
+// console.log(postgres.select('*').from('users'));
+db.select('*').from('users').then(data => {         // Query 
+    console.log(data);
+});
+
 
 const app = express();
 app.use(express.json());        // Middleware para poder interpretar el JSON del body.
@@ -71,20 +89,31 @@ app.post('/signin', (req, res) => {
 // REGISTER POST
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;     // Obtenemos la data del body
+    db('users')
+      .returning('*')  
+      .insert({
+        email: email,
+        name: name,   
+        joined: new Date()         
+      })
+      .then(user => {
+        res.json(user[0]); 
+      })
+      .catch(err => res.status(400).json('unable to register'));
 
     // bcrypt.hash(password, null, null, function(err, hash) {      // Hash de password
     //     console.log(hash);
     // });
 
-    database.users.push({                           // Añadimos a la base de datos con el body
-        id: '125',
-        name: name,
-        email: email,
-        //password: password,
-        entries: 0,
-        joined: new Date()        
-    });
-    res.json(database.users[database.users.length-1]);     // Devolvemos un response con el nuevo
+    // database.users.push({                           // Añadimos a la base de datos con el body
+    //     id: '125',
+    //     name: name,
+    //     email: email,
+    //     //password: password,
+    //     entries: 0,
+    //     joined: new Date()        
+    // });
+    // res.json(database.users[database.users.length-1]);     // Devolvemos un response con el nuevo
 });
 
 // PROFILE GET
