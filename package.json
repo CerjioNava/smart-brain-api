@@ -20,6 +20,7 @@
   "homepage": "https://github.com/CerjioNava/smart-brain-api#readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "clarifai": "^2.9.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "knex": "^0.95.6",
