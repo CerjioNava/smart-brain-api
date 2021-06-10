@@ -3,7 +3,7 @@ import Clarifai from 'clarifai';
 import { response } from 'express';
 
 const app = new Clarifai.App({
-    apiKey: '13940750695a4f419b3bb54c588f9677',
+    apiKey: process.env.API_KEY;    // '13940750695a4f419b3bb54c588f9677',
   });
 
 const handleAPIcall = (req, res) => {
