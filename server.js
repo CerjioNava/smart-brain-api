@@ -14,10 +14,12 @@ import { handleImage, handleAPIcall } from './controllers/image.js';
 const db = knex({
     client: 'pg',
     connection: {
-      host : 'postgresql-perpendicular-91881',
-      user : 'postgres',
-      password : 'root',
-      database : 'smartbrain'
+        host : process.env.DATABASE_URL,
+        ssl: true,
+    //   host : 'postgresql-perpendicular-91881',
+    //   user : 'postgres',
+    //   password : 'root',
+    //   database : 'smartbrain'
     }
 });
 
