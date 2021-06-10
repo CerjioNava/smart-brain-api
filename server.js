@@ -66,7 +66,7 @@ const database = {
 
 // HOME PAGE GET
 app.get('/', (req, res) => {
-    res.send(database.users);
+    res.send('It is working!');
 });
 
 // SIGN IN POST
