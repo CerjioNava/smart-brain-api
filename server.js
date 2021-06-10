@@ -18,13 +18,14 @@ const db = knex({
         ssl: {
             rejectUnauthorized: false
         }
-        // ssl: true,
+    }
+});
+
+    // ssl: true,
     //   host : 'postgresql-perpendicular-91881',
     //   user : 'postgres',
     //   password : 'root',
     //   database : 'smartbrain'
-    }
-});
 
 // console.log(postgres.select('*').from('users'));
 db.select('*').from('users').then(data => {         // Query 
